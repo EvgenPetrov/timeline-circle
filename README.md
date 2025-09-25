@@ -1,24 +1,26 @@
-# Исторические даты — Timeline Block (React + TS + Webpack)
+# timeline-circle
 
-Интерактивный блок с временными отрезками и слайдером событий для активного отрезка.  
-Изолирован: можно рендерить несколько инстансов на странице. Стили — CSS Modules.  
-Слайдер — Swiper. Анимации — gsap. Стили — SCSS. Сборка — Webpack 5.
+Interactive circular timeline in React + TypeScript.  
+Rotating ring with a fixed crosshair, evenly spaced markers, active badge with a horizontal label, and a responsive events carousel (Swiper).  
+Stack: React, TypeScript, GSAP, Swiper, SCSS Modules, Webpack 5.
 
-## Скрипты
+## Quick start
 
-- `npm run dev` — локальная разработка (http://localhost:5173)
-- `npm run build` — продакшен-сборка в `dist/`
+**Requirements:** Node.js ≥ 18, npm.
 
-## Структура данных
+```bash
+# 1) Clone
+git clone https://github.com/EvgenPetrov/timeline-circle.git
+cd timeline-circle
 
-См. `src/data/timelineData.ts`. Каждый сегмент:
+# 2) Install deps
+npm install
 
-```ts
-type TimelineSegment = {
-  id: string;
-  label: string;
-  startYear: number;
-  endYear: number;
-  events: { year: number; title: string; text: string }[];
-};
+# 3) Dev server
+npm run dev
+# open the URL printed in the terminal (by default http://localhost:5173)
+
+# 4) Production build
+npm run build
+# output will be in /dist
 ```
