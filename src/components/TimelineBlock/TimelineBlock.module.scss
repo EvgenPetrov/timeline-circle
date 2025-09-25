@@ -1,0 +1,256 @@
+@use "../../styles/variables" as *;
+
+.wrapper {
+  position: relative;
+  background: #fff;
+  color: $color-text;
+  max-width: 1440px;
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid #e2e6f2;
+}
+
+.gridDecor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.decorBar {
+  position: absolute;
+  left: clamp(16px, 2.5vw, 32px);
+  top: clamp(64px, 8vw, 96px);
+  width: 6px;
+  height: clamp(64px, 10vw, 96px);
+  border-radius: 3px;
+  background: linear-gradient(180deg, #4364ff 0%, #ff6aa7 100%);
+  z-index: 1;
+}
+
+.headerRow {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: clamp(8px, 1.6vw, 24px);
+}
+.title {
+  font-size: $fs-title;
+  font-weight: 700;
+  margin: 0;
+}
+
+.centerRow {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  padding: clamp(8px, 2vw, 16px) 0;
+}
+
+.circle {
+  position: relative;
+  width: clamp(320px, 44vw, 536px);
+  height: clamp(320px, 44vw, 536px);
+}
+
+.ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid #e2e6f2;
+  --ring: 0deg;
+  will-change: transform;
+}
+
+.crossV,
+.crossH {
+  position: absolute;
+  background: #e8ebf5;
+  opacity: 0.9;
+  pointer-events: none;
+}
+.crossV {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  transform: translateX(-50%);
+}
+.crossH {
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  transform: translateY(-50%);
+}
+
+.point {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #1f1f1f;
+  transform: translate(-50%, -50%) translateZ(0);
+  backface-visibility: hidden;
+  cursor: pointer;
+
+  &::after {
+    content: attr(data-index);
+    position: absolute;
+    left: -28px;
+    top: -28px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 1px solid #cfd6ea;
+    background: #fff;
+    color: $color-text;
+    font-size: 14px;
+    line-height: 56px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    opacity: 0;
+    transform: scale(0.85) rotate(calc(-1 * var(--ring)));
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    pointer-events: none;
+  }
+  &:hover::after {
+    opacity: 1;
+    transform: scale(1) rotate(calc(-1 * var(--ring)));
+  }
+}
+.pointActive {
+  background: $color-year-right;
+}
+
+.activeBadge {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+}
+.badgeNum {
+  position: absolute;
+  left: -28px; /* половина 56 */
+  top: -28px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 1px solid #cfd6ea;
+  background: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+.badgeText {
+  position: absolute;
+  left: calc(28px + 12px); /* радиус + отступ */
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-size: 14px;
+  color: $color-text;
+}
+
+.bigYears {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(24px, 6vw, 72px);
+  pointer-events: none;
+
+  span {
+    font-size: $fs-year;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: 2px;
+    user-select: none;
+  }
+}
+.leftYear {
+  color: $color-year-left;
+}
+.rightYear {
+  color: $color-year-right;
+}
+
+.eventsHeader {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: clamp(12px, 2vw, 20px) 0 clamp(6px, 1.6vw, 12px);
+}
+.eventsCounter {
+  font-variant-numeric: tabular-nums;
+  color: rgba($color-text, 0.7);
+}
+.eventsNav {
+  display: flex;
+  gap: 12px;
+}
+.eventsNavBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #d7dcef;
+  background: #fff;
+  color: $color-text;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+  &:hover {
+    background: #f4f6ff;
+  }
+  &:active {
+    transform: scale(0.96);
+  }
+}
+
+/* карточки событий */
+.events {
+  position: relative;
+  z-index: 1;
+}
+.eventCard {
+  background: transparent;
+  padding-right: 8px;
+}
+.eventYear {
+  color: $color-event-year;
+  font-weight: 700;
+  font-size: $fs-event-year;
+  margin: 0 0 6px;
+}
+.eventTitle {
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+.eventText {
+  font-size: $fs-event-text;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.swiperScoped :global(.swiper) {
+  padding-bottom: 0;
+}
+.swiperScoped :global(.swiper-button-prev),
+.swiperScoped :global(.swiper-button-next),
+.swiperScoped :global(.swiper-pagination) {
+  display: none !important;
+}
+
+@media (min-width: 768px) {
+  .wrapper {
+    padding: 40px 48px;
+  }
+}
