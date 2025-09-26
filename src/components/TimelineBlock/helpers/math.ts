@@ -1,7 +1,5 @@
-/** Не меняем формулы — переносим как есть */
 export const clampIndex = (i: number, n: number) => (i + n) % n;
 
-/** угол активного сегмента с поправкой на 12 часов (-90°) */
 export const angleForIndex = (i: number, n: number) => i * (360 / n) - 90;
 
 /** найти ближайший к current угол (в пределах −180..180 от current) */

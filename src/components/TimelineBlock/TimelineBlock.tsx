@@ -2,12 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { TimelineSegment } from "@/data/timelineData";
 import styles from "./TimelineBlock.module.scss";
 import { gsap } from "gsap";
-
-/* helpers — БЕЗ изменений логики */
 import { clampIndex, angleForIndex, nearestAngle, anchorPosition } from "./helpers/math";
 import { animateRing } from "./helpers/ring";
-
-/* parts */
 import Title from "./parts/Title";
 import Circle, { CirclePoint } from "./parts/Circle";
 import EventsHeader from "./parts/EventsHeader";
@@ -39,11 +35,11 @@ export default function TimelineBlock({
   const ringRef = useRef<HTMLDivElement>(null);
   const [ringDeg, setRingDeg] = useState(0);
 
-  // позиция бейджа (как было)
+  // позиция бейджа
   const anchorDeg = -30;
   const anchorPos = useMemo(() => anchorPosition(anchorDeg), []);
 
-  // точки по окружности (как было)
+  // точки по окружности
   const points: CirclePoint[] = useMemo(() => {
     const n = segments.length;
     const r = 50;
@@ -60,7 +56,7 @@ export default function TimelineBlock({
     });
   }, [segments]);
 
-  // анимация больших лет (как было)
+  // анимация больших лет
   useEffect(() => {
     gsap.fromTo(
       leftYearRef.current,
@@ -74,7 +70,7 @@ export default function TimelineBlock({
     );
   }, [active]);
 
-  // поворот кольца (как было)
+  // поворот кольца
   useEffect(() => {
     const n = segments.length;
     const target = anchorDeg - angleForIndex(active, n);
@@ -85,7 +81,7 @@ export default function TimelineBlock({
     setRingDeg(snapped);
     setEventIndex(0);
     swiperRef.current?.slideTo(0, 0);
-  }, [active, segments.length]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [active, segments.length]);
 
   const nextSegment = () => setActive((a) => clampIndex(a + 1, segments.length));
   const prevSegment = () => setActive((a) => clampIndex(a - 1, segments.length));

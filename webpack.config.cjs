@@ -1,4 +1,3 @@
-// webpack.config.cjs
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -37,15 +36,12 @@ module.exports = {
       {
         test: /\.module\.(s?css)$/,
         use: [
-          // Можно и в dev — у плагина есть HMR, а экспорты остаются корректными
           MiniCssExtractPlugin.loader,
           {
             loader: "css-loader",
             options: {
               importLoaders: 2,
-              // включаем модули и настраиваем имена классов
               modules: {
-                // авто-режим по имени файла *.module.*
                 namedExport: false,
                 localIdentName: isProd ? "[hash:base64:6]" : "[name]__[local]__[hash:base64:5]",
               },
@@ -80,8 +76,6 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "src/index.html"),
-      // если нужен фавикон: положите /src/favicon.ico и раскомментируйте строку ниже
-      // favicon: path.resolve(__dirname, "src/favicon.ico"),
       minify: isProd && { collapseWhitespace: true, removeComments: true },
     }),
     new MiniCssExtractPlugin({

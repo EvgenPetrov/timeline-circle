@@ -1,10 +1,5 @@
 import { gsap } from "gsap";
 
-/**
- * 1:1 повторяет твою анимацию из useEffect:
- * — крутим rotation элемента
- * — синхронизируем css-переменную --ring
- */
 export function animateRing(opts: { elem: HTMLDivElement | null; fromDeg: number; toDeg: number }) {
   const { elem, fromDeg, toDeg } = opts;
   if (!elem) return;
