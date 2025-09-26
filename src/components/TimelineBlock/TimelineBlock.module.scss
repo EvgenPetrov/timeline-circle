@@ -12,7 +12,7 @@
   overflow: hidden;
 }
 
-/* Рабочая колонковая схема, центральный блок тянется */
+/* колонка: заголовок / центр / панель */
 .inner {
   --pad: var(--space-pad-desktop);
   position: relative;
@@ -23,6 +23,7 @@
   gap: clamp(12px, 2vh, 28px);
 }
 
+/* ───────── Заголовок ───────── */
 .titleWrap {
   position: relative;
   z-index: 2;
@@ -38,7 +39,6 @@
   background: linear-gradient(180deg, #4364ff 0%, #ff6aa7 100%);
   pointer-events: none;
 }
-
 .title {
   margin: 0;
   font-family: var(--font-family);
@@ -50,14 +50,14 @@
   white-space: normal;
 }
 
-/* Центральная зона – настоящая «сердцевина» */
+/* ───────── Центр с окружностью/годами ───────── */
 .centerRow {
   position: relative;
   z-index: 1;
   flex: 1 1 auto;
   display: grid;
   place-items: center;
-  transform: translateY(calc(-1 * var(--lift-y))); /* аккуратно поднимаем всё */
+  transform: translateY(calc(-1 * var(--lift-y)));
 }
 
 .circle {
@@ -65,7 +65,6 @@
   width: clamp(320px, 44vw, 536px);
   height: clamp(320px, 44vw, 536px);
 }
-
 .ring {
   position: absolute;
   inset: 0;
@@ -98,6 +97,7 @@
   transform: translate(-50%, -50%);
 }
 
+/* точки на окружности */
 .point {
   position: absolute;
   display: block;
@@ -105,14 +105,11 @@
   height: 6px;
   aspect-ratio: 1/1;
   border-radius: 50%;
-  appearance: none;
   border: 0;
   padding: 0;
   outline: none;
   background: #1f1f1f;
-  box-shadow: none;
   transform: translate(-50%, -50%) translateZ(0);
-  backface-visibility: hidden;
   cursor: pointer;
 }
 .point:focus-visible {
@@ -147,6 +144,7 @@
   background: var(--color-year-right);
 }
 
+/* бейдж и большие годы */
 .activeBadge {
   position: absolute;
   z-index: 2;
@@ -181,7 +179,6 @@
   line-height: 150%;
   color: var(--color-text);
 }
-
 .bigYears {
   position: absolute;
   inset: 0;
@@ -208,7 +205,7 @@
   color: var(--color-year-right);
 }
 
-/* Нижняя панель */
+/* ───────── Панель навигации по сегментам ───────── */
 .eventsHeader {
   position: relative;
   z-index: 1;
@@ -249,6 +246,7 @@
   transform: scale(0.96);
 }
 
+/* ───────── События / свайпер ───────── */
 .events {
   position: relative;
   z-index: 1;
@@ -284,7 +282,7 @@
   opacity: 1;
 }
 
-/* вспомогательные стрелки по краям списка событий */
+/* стрелки у списка событий (десктоп) */
 .eventsSliderBtn {
   position: absolute;
   top: 50%;
@@ -325,17 +323,86 @@
   display: none !important;
 }
 
+/* ───────── Пагинация-точки (мобилка) ───────── */
+.eventsDots {
+  display: none;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  border: 0;
+  background: #d7dcef;
+  opacity: 0.7;
+  cursor: pointer;
+  transition: opacity 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dotActive {
+  background: var(--color-event-year);
+  opacity: 1;
+  box-shadow: 0 0 0 3px rgba(56, 119, 238, 0.15);
+}
+
+/* ───────── Мобилка (<768) ───────── */
 @media (max-width: 767px) {
   .inner {
     --pad: var(--space-pad-mobile);
+    gap: 12px;
   }
+
+  /* центр больше не тянет высоту, но сам блок годов занимает часть вьюпорта */
+  .centerRow {
+    flex: 0 0 auto;
+    transform: none;
+    place-items: center;
+  }
+
+  /* даём годам «воздух»: 32–38% высоты вьюпорта (но не меньше/не больше разумных значений) */
+  .circle {
+    width: 100%;
+    height: clamp(140px, 34vh, 220px);
+    margin: 4px 0;
+  }
+
+  /* круг и окружные метки скрываем */
+  .ring,
+  .crossV,
+  .crossH,
+  .point,
+  .activeBadge {
+    display: none !important;
+  }
+
+  /* сами годы — меньше шрифт и меньше зазор, чтобы гарантированно вмещались */
+  .bigYears {
+    gap: clamp(8px, 3vw, 16px);
+  }
+  .bigYears span {
+    font-size: clamp(40px, 16vw, 62px);
+    line-height: 0.9;
+  }
+
+  /* события ближе, стрелки скрыты; снизу — кружочки */
+  .events {
+    margin-top: 4px;
+  }
+  .eventsSliderBtn {
+    display: none;
+  }
+  .eventsDots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
   .title {
     font-size: 20px;
     line-height: 120%;
-  }
-  .bigYears span {
-    font-size: 56px;
-    letter-spacing: -0.02em;
   }
   .eventYear {
     font-size: 18px;

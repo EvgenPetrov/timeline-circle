@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useEffect, useState } from "react";
+import { RefObject, useCallback, useEffect, useMemo, useState } from "react";
 import styles from "../TimelineBlock.module.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
@@ -22,8 +22,12 @@ export default function EventsList({
   resetKey,
   segmentId,
 }: EventsListProps) {
+  const [activeIdx, setActiveIdx] = useState(0);
   const [showPrev, setShowPrev] = useState(false);
   const [showNext, setShowNext] = useState(false);
+
+  // мобильный порог
+  const isMobile = useMedia("(max-width: 767px)");
 
   const updateNav = useCallback(
     (sw: SwiperType | null) => {
@@ -34,13 +38,15 @@ export default function EventsList({
       const maxIdx = Math.max(0, total - spv);
       setShowPrev(i > 0);
       setShowNext(i < maxIdx);
+      setActiveIdx(i);
     },
     [events.length]
   );
 
   useEffect(() => {
+    
     updateNav(swiperRef.current);
-  }, [events.length, resetKey]); // пересчёт при смене сегмента
+  }, [events.length, resetKey, updateNav]);
 
   const slidePrev = () => swiperRef.current?.slidePrev();
   const slideNext = () => swiperRef.current?.slideNext();
@@ -52,6 +58,7 @@ export default function EventsList({
         modules={[A11y]}
         slidesPerView={1}
         spaceBetween={24}
+        breakpoints={{ 768: { slidesPerView: 3, spaceBetween: 32 } }}
         onSwiper={(sw) => {
           swiperRef.current = sw;
           requestAnimationFrame(() => updateNav(sw));
@@ -63,7 +70,6 @@ export default function EventsList({
         onResize={(sw) => updateNav(sw)}
         onBreakpoint={(sw) => updateNav(sw)}
         className={styles.swiperScoped}
-        breakpoints={{ 768: { slidesPerView: 3, spaceBetween: 32 } }}
         a11y={{
           prevSlideMessage: "Предыдущее событие",
           nextSlideMessage: "Следующее событие",
@@ -79,7 +85,8 @@ export default function EventsList({
         ))}
       </Swiper>
 
-      {showPrev && (
+      
+      {!isMobile && showPrev && (
         <button
           className={`${styles.eventsSliderBtn} ${styles.eventsSliderBtnLeft}`}
           onClick={slidePrev}
@@ -87,7 +94,7 @@ export default function EventsList({
           ‹
         </button>
       )}
-      {showNext && (
+      {!isMobile && showNext && (
         <button
           className={`${styles.eventsSliderBtn} ${styles.eventsSliderBtnRight}`}
           onClick={slideNext}
@@ -95,6 +102,39 @@ export default function EventsList({
           ›
         </button>
       )}
+
+      
+      {isMobile && events.length > 1 && (
+        <div className={styles.eventsDots} role="tablist" aria-label="Пагинация событий">
+          {events.map((_, i) => (
+            <button
+              key={i}
+              role="tab"
+              aria-selected={i === activeIdx}
+              aria-label={`Слайд ${i + 1}`}
+              className={`${styles.dot} ${i === activeIdx ? styles.dotActive : ""}`}
+              onClick={() => swiperRef.current?.slideTo(i)}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
+}
+
+
+function useMedia(query: string) {
+  const get = () => (typeof window !== "undefined" ? window.matchMedia(query).matches : false);
+  const [matches, setMatches] = useState(get);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mql = window.matchMedia(query);
+    const onChange = () => setMatches(mql.matches);
+    onChange();
+    mql.addEventListener?.("change", onChange);
+    return () => mql.removeEventListener?.("change", onChange);
+  }, [query]);
+
+  return matches;
 }
