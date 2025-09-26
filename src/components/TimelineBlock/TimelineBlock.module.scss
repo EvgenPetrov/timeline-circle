@@ -26,6 +26,7 @@
   left: 80px;
   z-index: 2;
 }
+
 .titleWrap::before {
   content: "";
   position: absolute;
@@ -128,7 +129,7 @@
   border: 1px solid #cfd6ea;
   background: #fff;
   color: var(--color-text);
-  font-size: 14px;
+  font-size: 20px;
   line-height: 56px;
   text-align: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
@@ -150,6 +151,7 @@
   z-index: 2;
   pointer-events: none;
 }
+
 .badgeNum {
   position: absolute;
   left: -28px;
@@ -161,11 +163,12 @@
   background: #fff;
   display: grid;
   place-items: center;
-  font-size: 14px;
+  font-size: 20px;
   font-variant-numeric: tabular-nums;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   transform: rotate(calc(-1 * var(--ring)));
 }
+
 .badgeText {
   font-family: var(--font-family);
   font-weight: 700;
@@ -183,12 +186,14 @@
 .bigYears {
   position: absolute;
   inset: 0;
+  opacity: 0.8;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: clamp(24px, 6vw, 72px);
   pointer-events: none;
 }
+
 .bigYears span {
   font-family: var(--font-family);
   font-weight: 700;
@@ -213,6 +218,7 @@
   gap: 16px;
   margin: clamp(12px, 2vw, 20px) 0 clamp(6px, 1.6vw, 12px);
 }
+
 .eventsCounter {
   font-family: var(--font-family);
   font-weight: 400;
@@ -225,12 +231,14 @@
   gap: 12px;
 }
 .eventsNavBtn {
-  width: 36px;
-  height: 36px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   border: 1px solid #d7dcef;
   background: #fff;
   color: var(--color-text);
+  font-size: 22px;
+  line-height: 1;
   display: grid;
   place-items: center;
   cursor: pointer;
@@ -276,6 +284,37 @@
   color: var(--color-text);
   margin: 0;
   opacity: 1;
+}
+
+.eventsSliderBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid #d7dcef;
+  background: #fff;
+  color: var(--color-text);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  z-index: 3;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+.eventsSliderBtn:hover {
+  background: #f4f6ff;
+}
+.eventsSliderBtn:active {
+  transform: translateY(-50%) scale(0.96);
+}
+.eventsSliderBtnLeft {
+  left: -45px;
+}
+.eventsSliderBtnRight {
+  right: -45px;
 }
 
 .swiperScoped :global(.swiper) {

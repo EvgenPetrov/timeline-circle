@@ -86,7 +86,7 @@ export default function TimelineBlock({
   const nextSegment = () => setActive((a) => clampIndex(a + 1, segments.length));
   const prevSegment = () => setActive((a) => clampIndex(a - 1, segments.length));
 
-  const eventsTotal = activeSegment.events.length;
+  const segmentsTotal = segments.length;
 
   return (
     <section className={styles.wrapper} aria-label="Исторические даты">
@@ -108,8 +108,8 @@ export default function TimelineBlock({
         />
 
         <EventsHeader
-          eventIndex={eventIndex}
-          eventsTotal={eventsTotal}
+          eventIndex={active}
+          eventsTotal={segmentsTotal}
           onPrev={prevSegment}
           onNext={nextSegment}
         />
