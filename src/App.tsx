@@ -1,5 +1,5 @@
-import TimelineBlock from "./components/TimelineBlock/TimelineBlock";
-import { segmentsMaxDemo } from "./data/timelineData";
+import TimelineBlock from "@/components/TimelineBlock";
+import { segmentsMaxDemo } from "@/data/timelineData";
 
 export default function App() {
   return (

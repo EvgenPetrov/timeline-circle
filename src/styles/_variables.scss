@@ -1,7 +1,7 @@
-$color-text: #42567a;
-$color-year-left: #5d5fef;
-$color-year-right: #ef5da8;
-$color-event-year: #3877ee;
+$color-text: #42567a !default;
+$color-year-left: #5d5fef !default;
+$color-year-right: #ef5da8 !default;
+$color-event-year: #3877ee !default;
 
 $bg-page: #fff;
 
@@ -10,4 +10,6 @@ $fs-year: clamp(48px, 14vw, 160px);
 $fs-event-year: 16px;
 $fs-event-text: 14px;
 
+$inner-pad: 80px;
+$bar-gap: 16px;
 $radius-circle: 280px;

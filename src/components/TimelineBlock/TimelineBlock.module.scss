@@ -1,55 +1,54 @@
 @use "../../styles/variables" as *;
 
-/* вертикальные бордеры по краям */
 .wrapper {
   position: relative;
-  color: $color-text;
-  background: #fff;
+  color: var(--color-text);
+  background: var(--bg-page);
   max-width: 1440px;
   margin: 0 auto;
-  min-height: 100vh;
+  height: 100vh;
   border-left: 1px solid #e2e6f2;
   border-right: 1px solid #e2e6f2;
   overflow: hidden;
 }
 
-/* общий внутренний отступ 80px для всего контента */
 .inner {
   position: relative;
-  height: 100%;
-  padding: 80px; /* ← требуемые 80px */
+  padding: 80px;
+  min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
 }
 
-/* Заголовок и встроенная decorBar */
 .titleWrap {
   position: absolute;
-  top: 90px; /* 170 – 80 (с учётом общего padding) */
-  left: 0; /* упираемся в внутренний padding */
+  top: 90px;
+  left: 80px;
   z-index: 2;
-
-  &::before {
-    content: "";
-    position: absolute;
-    left: -80px; /* уходим на бордер секции */
-    top: 0;
-    width: 6px;
-    height: 100%;
-    border-radius: 3px;
-    background: linear-gradient(180deg, #4364ff 0%, #ff6aa7 100%);
-    pointer-events: none;
-  }
+}
+.titleWrap::before {
+  content: "";
+  position: absolute;
+  left: -80px;
+  top: 0;
+  width: 6px;
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #4364ff 0%, #ff6aa7 100%);
+  pointer-events: none;
 }
 
 .title {
   margin: 0;
+  font-family: var(--font-family);
   font-weight: 700;
-  font-size: clamp(28px, 3.9vw, 56px);
-  line-height: 1.2;
-  max-width: 360px; /* две строки */
+  font-size: 56px;
+  line-height: 120%;
+  color: var(--color-text);
+  max-width: 360px;
   white-space: normal;
 }
 
-/* Центр с кругом */
 .centerRow {
   position: relative;
   z-index: 1;
@@ -61,13 +60,9 @@
   position: relative;
   width: clamp(320px, 44vw, 536px);
   height: clamp(320px, 44vw, 536px);
-
-  /* верх окружности: 215px от верхнего края секции
-     = (215 - 80 общего padding) от верхней границы .inner */
-  margin-top: 135px; /* 215 - 80 */
+  margin-top: 135px;
 }
 
-/* вращаемое кольцо */
 .ring {
   position: absolute;
   inset: 0;
@@ -77,70 +72,79 @@
   will-change: transform;
 }
 
-/* перекрестье */
 .crossV,
 .crossH {
   position: absolute;
   background: #e8ebf5;
-  opacity: 0.9;
+  opacity: 0.7;
   pointer-events: none;
+  z-index: 0;
 }
 .crossV {
-  top: 0;
-  bottom: 0;
+  top: 50%;
   left: 50%;
   width: 1px;
-  transform: translateX(-50%);
+  height: 200vmax;
+  transform: translate(-50%, -50%);
 }
 .crossH {
-  left: 0;
-  right: 0;
   top: 50%;
+  left: 50%;
   height: 1px;
-  transform: translateY(-50%);
+  width: 200vmax;
+  transform: translate(-50%, -50%);
 }
 
-/* точки 6×6 */
 .point {
   position: absolute;
+  display: block;
   width: 6px;
   height: 6px;
+  aspect-ratio: 1 / 1;
   border-radius: 50%;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  padding: 0;
+  outline: none;
   background: #1f1f1f;
+  box-shadow: none;
   transform: translate(-50%, -50%) translateZ(0);
   backface-visibility: hidden;
   cursor: pointer;
-
-  &::after {
-    content: attr(data-index);
-    position: absolute;
-    left: -28px;
-    top: -28px;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    border: 1px solid #cfd6ea;
-    background: #fff;
-    color: $color-text;
-    font-size: 14px;
-    line-height: 56px;
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    opacity: 0;
-    transform: scale(0.85) rotate(calc(-1 * var(--ring)));
-    transition: opacity 0.18s ease, transform 0.18s ease;
-    pointer-events: none;
-  }
-  &:hover::after {
-    opacity: 1;
-    transform: scale(1) rotate(calc(-1 * var(--ring)));
-  }
+}
+.point:focus-visible {
+  outline: 2px solid rgba(56, 119, 238, 0.3);
+  outline-offset: 2px;
+}
+.point::after {
+  content: attr(data-index);
+  position: absolute;
+  left: -28px;
+  top: -28px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 1px solid #cfd6ea;
+  background: #fff;
+  color: var(--color-text);
+  font-size: 14px;
+  line-height: 56px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  opacity: 0;
+  transform: scale(0.85) rotate(calc(-1 * var(--ring)));
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  pointer-events: none;
+}
+.point:hover::after {
+  opacity: 1;
+  transform: scale(1) rotate(calc(-1 * var(--ring)));
 }
 .pointActive {
-  background: $color-year-right;
+  background: var(--color-year-right);
 }
 
-/* активный бейдж */
 .activeBadge {
   position: absolute;
   z-index: 2;
@@ -163,17 +167,19 @@
   transform: rotate(calc(-1 * var(--ring)));
 }
 .badgeText {
+  font-family: var(--font-family);
+  font-weight: 700;
   position: absolute;
   left: calc(28px + 12px);
   top: 50%;
   transform: translateY(-50%) rotate(calc(-1 * var(--ring)));
   transform-origin: left center;
   white-space: nowrap;
-  font-size: 14px;
-  color: $color-text;
+  font-size: 20px;
+  line-height: 150%;
+  color: var(--color-text);
 }
 
-/* большие годы */
 .bigYears {
   position: absolute;
   inset: 0;
@@ -182,23 +188,23 @@
   justify-content: center;
   gap: clamp(24px, 6vw, 72px);
   pointer-events: none;
-
-  span {
-    font-weight: 700;
-    font-size: clamp(80px, 12vw, 200px);
-    line-height: 0.8;
-    letter-spacing: -0.02em;
-    user-select: none;
-  }
+}
+.bigYears span {
+  font-family: var(--font-family);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 0.8;
+  font-size: 200px;
+  user-select: none;
+  text-align: center;
 }
 .leftYear {
-  color: $color-year-left;
+  color: var(--color-year-left);
 }
 .rightYear {
-  color: $color-year-right;
+  color: var(--color-year-right);
 }
 
-/* нижняя панель и карточки */
 .eventsHeader {
   position: relative;
   z-index: 1;
@@ -208,8 +214,11 @@
   margin: clamp(12px, 2vw, 20px) 0 clamp(6px, 1.6vw, 12px);
 }
 .eventsCounter {
-  font-variant-numeric: tabular-nums;
-  color: rgba($color-text, 0.7);
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 150%;
+  color: rgba(66, 86, 122, 0.7);
 }
 .eventsNav {
   display: flex;
@@ -221,17 +230,17 @@
   border-radius: 50%;
   border: 1px solid #d7dcef;
   background: #fff;
-  color: $color-text;
+  color: var(--color-text);
   display: grid;
   place-items: center;
   cursor: pointer;
   transition: background 0.15s ease, transform 0.1s ease;
-  &:hover {
-    background: #f4f6ff;
-  }
-  &:active {
-    transform: scale(0.96);
-  }
+}
+.eventsNavBtn:hover {
+  background: #f4f6ff;
+}
+.eventsNavBtn:active {
+  transform: scale(0.96);
 }
 
 .events {
@@ -243,27 +252,68 @@
   padding-right: 8px;
 }
 .eventYear {
-  color: $color-event-year;
-  font-weight: 700;
-  font-size: $fs-event-year;
+  font-family: var(--second-family);
+  font-weight: 400;
+  font-size: 25px;
+  line-height: 120%;
+  text-transform: uppercase;
+  color: var(--color-event-year);
   margin: 0 0 6px;
 }
 .eventTitle {
-  font-weight: 600;
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 150%;
+  color: var(--color-text);
   margin: 0 0 4px;
 }
 .eventText {
-  font-size: $fs-event-text;
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 150%;
+  color: var(--color-text);
   margin: 0;
-  opacity: 0.9;
+  opacity: 1;
 }
 
-/* Swiper системные элементы скрываем */
 .swiperScoped :global(.swiper) {
-  padding-bottom: 0;
+  padding-bottom: 0 !important;
 }
 .swiperScoped :global(.swiper-button-prev),
 .swiperScoped :global(.swiper-button-next),
 .swiperScoped :global(.swiper-pagination) {
   display: none !important;
+}
+
+@media (max-width: 767px) {
+  .inner {
+    padding: 24px;
+  }
+  .titleWrap {
+    left: 24px;
+    top: 32px;
+  }
+  .titleWrap::before {
+    left: -24px;
+  }
+  .title {
+    font-size: 20px;
+    line-height: 120%;
+  }
+  .bigYears span {
+    font-size: 56px;
+    letter-spacing: -0.02em;
+  }
+  .eventYear {
+    font-size: 18px;
+  }
+  .eventTitle,
+  .eventText {
+    font-size: 20px;
+  }
+  .eventsHeader {
+    margin: 12px 0 8px;
+  }
 }
