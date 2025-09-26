@@ -1,70 +1,83 @@
 @use "../../styles/variables" as *;
 
+/* вертикальные бордеры по краям */
 .wrapper {
   position: relative;
-  background: #fff;
   color: $color-text;
+  background: #fff;
   max-width: 1440px;
   margin: 0 auto;
+  min-height: 100vh;
+  border-left: 1px solid #e2e6f2;
+  border-right: 1px solid #e2e6f2;
   overflow: hidden;
-  border: 1px solid #e2e6f2;
 }
 
-.gridDecor {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.decorBar {
-  position: absolute;
-  left: clamp(16px, 2.5vw, 32px);
-  top: clamp(64px, 8vw, 96px);
-  width: 6px;
-  height: clamp(64px, 10vw, 96px);
-  border-radius: 3px;
-  background: linear-gradient(180deg, #4364ff 0%, #ff6aa7 100%);
-  z-index: 1;
-}
-
-.headerRow {
+/* общий внутренний отступ 80px для всего контента */
+.inner {
   position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: clamp(8px, 1.6vw, 24px);
-}
-.title {
-  font-size: $fs-title;
-  font-weight: 700;
-  margin: 0;
+  height: 100%;
+  padding: 80px; /* ← требуемые 80px */
 }
 
+/* Заголовок и встроенная decorBar */
+.titleWrap {
+  position: absolute;
+  top: 90px; /* 170 – 80 (с учётом общего padding) */
+  left: 0; /* упираемся в внутренний padding */
+  z-index: 2;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: -80px; /* уходим на бордер секции */
+    top: 0;
+    width: 6px;
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(180deg, #4364ff 0%, #ff6aa7 100%);
+    pointer-events: none;
+  }
+}
+
+.title {
+  margin: 0;
+  font-weight: 700;
+  font-size: clamp(28px, 3.9vw, 56px);
+  line-height: 1.2;
+  max-width: 360px; /* две строки */
+  white-space: normal;
+}
+
+/* Центр с кругом */
 .centerRow {
   position: relative;
   z-index: 1;
   display: grid;
   place-items: center;
-  padding: clamp(8px, 2vw, 16px) 0;
 }
 
 .circle {
   position: relative;
   width: clamp(320px, 44vw, 536px);
   height: clamp(320px, 44vw, 536px);
+
+  /* верх окружности: 215px от верхнего края секции
+     = (215 - 80 общего padding) от верхней границы .inner */
+  margin-top: 135px; /* 215 - 80 */
 }
 
+/* вращаемое кольцо */
 .ring {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  border: 1px solid #e2e6f2;
+  border: 1px solid #c0c9e4;
   --ring: 0deg;
   will-change: transform;
 }
 
+/* перекрестье */
 .crossV,
 .crossH {
   position: absolute;
@@ -87,6 +100,7 @@
   transform: translateY(-50%);
 }
 
+/* точки 6×6 */
 .point {
   position: absolute;
   width: 6px;
@@ -126,6 +140,7 @@
   background: $color-year-right;
 }
 
+/* активный бейдж */
 .activeBadge {
   position: absolute;
   z-index: 2;
@@ -133,7 +148,7 @@
 }
 .badgeNum {
   position: absolute;
-  left: -28px; /* половина 56 */
+  left: -28px;
   top: -28px;
   width: 56px;
   height: 56px;
@@ -145,17 +160,20 @@
   font-size: 14px;
   font-variant-numeric: tabular-nums;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transform: rotate(calc(-1 * var(--ring)));
 }
 .badgeText {
   position: absolute;
-  left: calc(28px + 12px); /* радиус + отступ */
+  left: calc(28px + 12px);
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(-50%) rotate(calc(-1 * var(--ring)));
+  transform-origin: left center;
   white-space: nowrap;
   font-size: 14px;
   color: $color-text;
 }
 
+/* большие годы */
 .bigYears {
   position: absolute;
   inset: 0;
@@ -166,10 +184,10 @@
   pointer-events: none;
 
   span {
-    font-size: $fs-year;
-    line-height: 1;
     font-weight: 700;
-    letter-spacing: 2px;
+    font-size: clamp(80px, 12vw, 200px);
+    line-height: 0.8;
+    letter-spacing: -0.02em;
     user-select: none;
   }
 }
@@ -180,6 +198,7 @@
   color: $color-year-right;
 }
 
+/* нижняя панель и карточки */
 .eventsHeader {
   position: relative;
   z-index: 1;
@@ -215,7 +234,6 @@
   }
 }
 
-/* карточки событий */
 .events {
   position: relative;
   z-index: 1;
@@ -240,6 +258,7 @@
   opacity: 0.9;
 }
 
+/* Swiper системные элементы скрываем */
 .swiperScoped :global(.swiper) {
   padding-bottom: 0;
 }
@@ -247,10 +266,4 @@
 .swiperScoped :global(.swiper-button-next),
 .swiperScoped :global(.swiper-pagination) {
   display: none !important;
-}
-
-@media (min-width: 768px) {
-  .wrapper {
-    padding: 40px 48px;
-  }
 }

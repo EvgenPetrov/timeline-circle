@@ -14,7 +14,7 @@ type Props = {
 };
 
 const clampIndex = (i: number, n: number) => (i + n) % n;
-const angleForIndex = (i: number, n: number) => i * (360 / n) - 90; // 0° = вверх
+const angleForIndex = (i: number, n: number) => i * (360 / n) - 90;
 const nearestAngle = (current: number, target: number) => {
   let delta = ((target - current + 540) % 360) - 180;
   return current + delta;
@@ -28,28 +28,23 @@ export default function TimelineBlock({
   const [active, setActive] = useState(clampIndex(initialIndex, segments.length));
   const activeSegment = segments[active];
 
-  // события (нижний слайдер)
   const swiperRef = useRef<SwiperType | null>(null);
   const [eventIndex, setEventIndex] = useState(0);
 
-  // анимации лет
   const leftYearRef = useRef<HTMLSpanElement>(null);
   const rightYearRef = useRef<HTMLSpanElement>(null);
 
-  // вращаемое кольцо
   const ringRef = useRef<HTMLDivElement>(null);
   const [ringDeg, setRingDeg] = useState(0);
 
-  // якорь активного бейджа — чуть правее верха окружности
   const anchorDeg = -30;
   const anchorRad = (Math.PI / 180) * anchorDeg;
   const anchorPos = useMemo(() => {
-    const r = 50; // радиус в %
-    const c = 50; // центр в %
+    const r = 50;
+    const c = 50;
     return { x: c + r * Math.cos(anchorRad), y: c + r * Math.sin(anchorRad) };
   }, []);
 
-  // координаты точек (равномерно по окружности)
   const points = useMemo(() => {
     const n = segments.length;
     const r = 50;
@@ -66,7 +61,6 @@ export default function TimelineBlock({
     });
   }, [segments]);
 
-  // плавная смена лет
   useEffect(() => {
     gsap.fromTo(
       leftYearRef.current,
@@ -80,7 +74,6 @@ export default function TimelineBlock({
     );
   }, [active]);
 
-  // поворот кольца так, чтобы активная точка ушла в якорь
   useEffect(() => {
     const n = segments.length;
     const target = anchorDeg - angleForIndex(active, n);
@@ -108,7 +101,7 @@ export default function TimelineBlock({
     setRingDeg(snapped);
     setEventIndex(0);
     swiperRef.current?.slideTo(0, 0);
-  }, [active, segments.length]);
+  }, [active, segments.length]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const nextSegment = () => setActive((a) => clampIndex(a + 1, segments.length));
   const prevSegment = () => setActive((a) => clampIndex(a - 1, segments.length));
@@ -117,92 +110,99 @@ export default function TimelineBlock({
 
   return (
     <section className={styles.wrapper} aria-label="Исторические даты">
-      <div className={styles.gridDecor} aria-hidden />
-      <div className={styles.decorBar} aria-hidden />
+      {/* общий внутренний отступ 80px */}
+      <div className={styles.inner}>
+        {/* Заголовок + вертикальная плашка */}
+        <div className={styles.titleWrap}>
+          <h2 className={styles.title}>{title}</h2>
+        </div>
 
-      <div className={styles.headerRow}>
-        <h2 className={styles.title}>{title}</h2>
-      </div>
+        {/* Круг — его верхняя точка на 215px от верхнего края секции */}
+        <div className={styles.centerRow}>
+          <div className={styles.circle}>
+            <div
+              className={styles.ring}
+              ref={ringRef}
+              style={{ ["--ring" as any]: `${ringDeg}deg` }}>
+              {points.map((p) => (
+                <button
+                  key={p.id}
+                  className={`${styles.point} ${p.i === active ? styles.pointActive : ""}`}
+                  style={{ left: `${p.x}%`, top: `${p.y}%` }}
+                  data-index={p.i + 1}
+                  onClick={() => setActive(p.i)}
+                  aria-label={`Перейти к разделу: ${p.label}`}
+                />
+              ))}
+            </div>
 
-      <div className={styles.centerRow}>
-        <div className={styles.circle}>
-          <div className={styles.ring} ref={ringRef} style={{ ["--ring" as any]: `${ringDeg}deg` }}>
-            {points.map((p) => (
-              <button
-                key={p.id}
-                className={`${styles.point} ${p.i === active ? styles.pointActive : ""}`}
-                style={{ left: `${p.x}%`, top: `${p.y}%` }}
-                data-index={p.i + 1}
-                onClick={() => setActive(p.i)}
-                aria-label={`Перейти к разделу: ${p.label}`}
-              />
+            <span className={styles.crossV} aria-hidden />
+            <span className={styles.crossH} aria-hidden />
+
+            <div
+              className={styles.activeBadge}
+              style={{ left: `${anchorPos.x}%`, top: `${anchorPos.y}%` }}>
+              <span className={styles.badgeNum}>{active + 1}</span>
+              <span className={styles.badgeText}>{activeSegment.label}</span>
+            </div>
+
+            <div className={styles.bigYears}>
+              <span ref={leftYearRef} className={styles.leftYear}>
+                {activeSegment.startYear}
+              </span>
+              <span ref={rightYearRef} className={styles.rightYear}>
+                {activeSegment.endYear}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* панель навигации по сегментам */}
+        <div className={styles.eventsHeader}>
+          <div className={styles.eventsCounter}>
+            {String(eventIndex + 1).padStart(2, "0")} / {String(eventsTotal).padStart(2, "0")}
+          </div>
+          <div className={styles.eventsNav}>
+            <button
+              className={styles.eventsNavBtn}
+              onClick={prevSegment}
+              aria-label="Предыдущий период">
+              ‹
+            </button>
+            <button
+              className={styles.eventsNavBtn}
+              onClick={nextSegment}
+              aria-label="Следующий период">
+              ›
+            </button>
+          </div>
+        </div>
+
+        {/* события активного сегмента */}
+        <div className={styles.events}>
+          <Swiper
+            modules={[A11y]}
+            slidesPerView={1}
+            spaceBetween={24}
+            onSwiper={(sw) => (swiperRef.current = sw)}
+            onSlideChange={(sw) => setEventIndex(sw.activeIndex)}
+            className={styles.swiperScoped}
+            breakpoints={{ 768: { slidesPerView: 3, spaceBetween: 32 } }}
+            a11y={{
+              prevSlideMessage: "Предыдущее событие",
+              nextSlideMessage: "Следующее событие",
+            }}>
+            {activeSegment.events.map((ev) => (
+              <SwiperSlide key={`${activeSegment.id}-${ev.year}`}>
+                <article className={styles.eventCard}>
+                  <h3 className={styles.eventYear}>{ev.year}</h3>
+                  <p className={styles.eventTitle}>{ev.title}</p>
+                  <p className={styles.eventText}>{ev.text}</p>
+                </article>
+              </SwiperSlide>
             ))}
-          </div>
-
-          <span className={styles.crossV} aria-hidden />
-          <span className={styles.crossH} aria-hidden />
-
-          <div
-            className={styles.activeBadge}
-            style={{ left: `${anchorPos.x}%`, top: `${anchorPos.y}%` }}>
-            <span className={styles.badgeNum}>{active + 1}</span>
-            <span className={styles.badgeText}>{activeSegment.label}</span>
-          </div>
-
-          <div className={styles.bigYears}>
-            <span ref={leftYearRef} className={styles.leftYear}>
-              {activeSegment.startYear}
-            </span>
-            <span ref={rightYearRef} className={styles.rightYear}>
-              {activeSegment.endYear}
-            </span>
-          </div>
+          </Swiper>
         </div>
-      </div>
-
-      <div className={styles.eventsHeader}>
-        <div className={styles.eventsCounter}>
-          {String(eventIndex + 1).padStart(2, "0")} / {String(eventsTotal).padStart(2, "0")}
-        </div>
-        <div className={styles.eventsNav}>
-          <button
-            className={styles.eventsNavBtn}
-            onClick={prevSegment}
-            aria-label="Предыдущий период">
-            ‹
-          </button>
-          <button
-            className={styles.eventsNavBtn}
-            onClick={nextSegment}
-            aria-label="Следующий период">
-            ›
-          </button>
-        </div>
-      </div>
-
-      <div className={styles.events}>
-        <Swiper
-          modules={[A11y]}
-          slidesPerView={1}
-          spaceBetween={24}
-          onSwiper={(sw) => (swiperRef.current = sw)}
-          onSlideChange={(sw) => setEventIndex(sw.activeIndex)}
-          className={styles.swiperScoped}
-          breakpoints={{ 768: { slidesPerView: 3, spaceBetween: 32 } }}
-          a11y={{
-            prevSlideMessage: "Предыдущее событие",
-            nextSlideMessage: "Следующее событие",
-          }}>
-          {activeSegment.events.map((ev) => (
-            <SwiperSlide key={`${activeSegment.id}-${ev.year}`}>
-              <article className={styles.eventCard}>
-                <h3 className={styles.eventYear}>{ev.year}</h3>
-                <p className={styles.eventTitle}>{ev.title}</p>
-                <p className={styles.eventText}>{ev.text}</p>
-              </article>
-            </SwiperSlide>
-          ))}
-        </Swiper>
       </div>
     </section>
   );
