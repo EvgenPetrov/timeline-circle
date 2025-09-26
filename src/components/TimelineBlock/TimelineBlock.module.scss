@@ -7,30 +7,30 @@
   max-width: 1440px;
   margin: 0 auto;
   height: 100vh;
-  border-left: 1px solid #e2e6f2;
-  border-right: 1px solid #e2e6f2;
+  border-left: 1px solid var(--border-page);
+  border-right: 1px solid var(--border-page);
   overflow: hidden;
 }
 
+/* Рабочая колонковая схема, центральный блок тянется */
 .inner {
+  --pad: var(--space-pad-desktop);
   position: relative;
-  padding: 80px;
-  min-height: 100vh;
-  min-height: 100svh;
-  min-height: 100dvh;
+  height: 100%;
+  padding: var(--pad);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 2vh, 28px);
 }
 
 .titleWrap {
-  position: absolute;
-  top: 90px;
-  left: 80px;
+  position: relative;
   z-index: 2;
 }
-
 .titleWrap::before {
   content: "";
   position: absolute;
-  left: -80px;
+  left: calc(-1 * var(--pad));
   top: 0;
   width: 6px;
   height: 100%;
@@ -50,18 +50,20 @@
   white-space: normal;
 }
 
+/* Центральная зона – настоящая «сердцевина» */
 .centerRow {
   position: relative;
   z-index: 1;
+  flex: 1 1 auto;
   display: grid;
   place-items: center;
+  transform: translateY(calc(-1 * var(--lift-y))); /* аккуратно поднимаем всё */
 }
 
 .circle {
   position: relative;
   width: clamp(320px, 44vw, 536px);
   height: clamp(320px, 44vw, 536px);
-  margin-top: 135px;
 }
 
 .ring {
@@ -101,10 +103,9 @@
   display: block;
   width: 6px;
   height: 6px;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 1/1;
   border-radius: 50%;
   appearance: none;
-  -webkit-appearance: none;
   border: 0;
   padding: 0;
   outline: none;
@@ -151,7 +152,6 @@
   z-index: 2;
   pointer-events: none;
 }
-
 .badgeNum {
   position: absolute;
   left: -28px;
@@ -168,7 +168,6 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   transform: rotate(calc(-1 * var(--ring)));
 }
-
 .badgeText {
   font-family: var(--font-family);
   font-weight: 700;
@@ -193,7 +192,6 @@
   gap: clamp(24px, 6vw, 72px);
   pointer-events: none;
 }
-
 .bigYears span {
   font-family: var(--font-family);
   font-weight: 700;
@@ -210,15 +208,15 @@
   color: var(--color-year-right);
 }
 
+/* Нижняя панель */
 .eventsHeader {
   position: relative;
   z-index: 1;
   display: flex;
   align-items: center;
   gap: 16px;
-  margin: clamp(12px, 2vw, 20px) 0 clamp(6px, 1.6vw, 12px);
+  margin: 0;
 }
-
 .eventsCounter {
   font-family: var(--font-family);
   font-weight: 400;
@@ -286,6 +284,7 @@
   opacity: 1;
 }
 
+/* вспомогательные стрелки по краям списка событий */
 .eventsSliderBtn {
   position: absolute;
   top: 50%;
@@ -311,10 +310,10 @@
   transform: translateY(-50%) scale(0.96);
 }
 .eventsSliderBtnLeft {
-  left: -45px;
+  left: -50px;
 }
 .eventsSliderBtnRight {
-  right: -45px;
+  right: -50px;
 }
 
 .swiperScoped :global(.swiper) {
@@ -328,14 +327,7 @@
 
 @media (max-width: 767px) {
   .inner {
-    padding: 24px;
-  }
-  .titleWrap {
-    left: 24px;
-    top: 32px;
-  }
-  .titleWrap::before {
-    left: -24px;
+    --pad: var(--space-pad-mobile);
   }
   .title {
     font-size: 20px;
@@ -351,8 +343,5 @@
   .eventTitle,
   .eventText {
     font-size: 20px;
-  }
-  .eventsHeader {
-    margin: 12px 0 8px;
   }
 }

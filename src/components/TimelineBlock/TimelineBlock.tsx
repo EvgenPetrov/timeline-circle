@@ -93,34 +93,39 @@ export default function TimelineBlock({
       <div className={styles.inner}>
         <Title title={title} />
 
-        <Circle
-          ringRef={ringRef}
-          ringDeg={ringDeg}
-          points={points}
-          activeIndex={active}
-          onPointClick={setActive}
-          anchorPos={anchorPos}
-          activeLabel={activeSegment.label}
-          startYear={activeSegment.startYear}
-          endYear={activeSegment.endYear}
-          leftYearRef={leftYearRef}
-          rightYearRef={rightYearRef}
-        />
+        <div className={styles.main}>
+          <div className={styles.centerRow}>
+            <Circle
+              ringRef={ringRef}
+              ringDeg={ringDeg}
+              points={points}
+              activeIndex={active}
+              onPointClick={setActive}
+              anchorPos={anchorPos}
+              activeLabel={activeSegment.label}
+              startYear={activeSegment.startYear}
+              endYear={activeSegment.endYear}
+              leftYearRef={leftYearRef}
+              rightYearRef={rightYearRef}
+            />
+          </div>
 
-        <EventsHeader
-          eventIndex={active}
-          eventsTotal={segmentsTotal}
-          onPrev={prevSegment}
-          onNext={nextSegment}
-        />
-
-        <EventsList
-          swiperRef={swiperRef}
-          events={activeSegment.events}
-          onSlideChange={setEventIndex}
-          resetKey={active}
-          segmentId={activeSegment.id}
-        />
+          <div className={styles.bottom}>
+            <EventsHeader
+              eventIndex={active}
+              eventsTotal={segments.length}
+              onPrev={prevSegment}
+              onNext={nextSegment}
+            />
+            <EventsList
+              swiperRef={swiperRef}
+              events={activeSegment.events}
+              onSlideChange={setEventIndex}
+              resetKey={active}
+              segmentId={activeSegment.id}
+            />
+          </div>
+        </div>
       </div>
     </section>
   );

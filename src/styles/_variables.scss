@@ -1,15 +1,18 @@
-$color-text: #42567a !default;
-$color-year-left: #5d5fef !default;
-$color-year-right: #ef5da8 !default;
-$color-event-year: #3877ee !default;
+:root {
+  --font-family: "PT Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    sans-serif;
+  --second-family: "Bebas Neue", "PT Sans", sans-serif;
 
-$bg-page: #fff;
+  --bg-page: #fff;
+  --color-text: #42567a;
+  --color-year-left: #5d5fef;
+  --color-year-right: #ef5da8;
+  --color-event-year: #3877ee;
+  --border-page: #e2e6f2;
 
-$fs-title: clamp(20px, 5vw, 36px);
-$fs-year: clamp(48px, 14vw, 160px);
-$fs-event-year: 16px;
-$fs-event-text: 14px;
+  --space-pad-desktop: 80px;
+  --space-pad-mobile: 24px;
 
-$inner-pad: 80px;
-$bar-gap: 16px;
-$radius-circle: 280px;
+  /* сколько «поднять» центральную зону; без жёстких пикселей */
+  --lift-y: clamp(8px, 2.4vh, 28px);
+}
